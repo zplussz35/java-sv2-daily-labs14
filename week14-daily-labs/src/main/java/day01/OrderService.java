@@ -15,9 +15,9 @@ public class OrderService {
     }
 
     public List<Order> findOrdersByStatus(String status) {
-        return orders.stream().
-                filter(o -> o.getStatus().equals(status))
-                .collect(Collectors.toList());
+        return orders.stream()
+                .filter(o->o.getStatus().equals(status))
+                .toList();
     }
 
     public long countOrdersByStatus(String status) {
