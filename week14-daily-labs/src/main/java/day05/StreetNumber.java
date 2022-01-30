@@ -19,23 +19,9 @@ public class StreetNumber {
                 String[] parts = line.split(" ");
                 String street = parts[0];
                 int hNumber = Integer.parseInt(parts[1]);
-                if (!sNumbers.containsKey(street)) {
-                    sNumbers.put(street, new ArrayList<>());
+                if (!setUpStreets(street, hNumber)) {
+                    addNewNumber(street,hNumber);
                 }
-                if (hNumber == 1) {
-                    if (sNumbers.get(street).isEmpty()) {
-                        sNumbers.get(street).add(1);
-                    } else {
-                        sNumbers.get(street).add(sNumbers.get(street).get(sNumbers.get(street).size() - 1) + 2);
-                    }
-                } else {
-                    if (sNumbers.get(street).isEmpty()) {
-                        sNumbers.get(street).add(2);
-                    } else {
-                        sNumbers.get(street).add(sNumbers.get(street).get(sNumbers.get(street).size() - 1) + 2);
-                    }
-                }
-
             }
 
         } catch (IOException ioe) {
@@ -43,13 +29,31 @@ public class StreetNumber {
         }
     }
 
-    public Map<String,List<Integer>> getsNumbers(){
+    private void addNewNumber(String street, int hNumber) {
+        int maxNumber=sNumbers.get(street).stream().mapToInt(i->i).filter(i->i%2==hNumber).max().orElse(-hNumber);
+        sNumbers.get(street).add(maxNumber+2);
+    }
+
+    private boolean setUpStreets(String street, int hNumber) {
+        if (!sNumbers.containsKey(street)) {
+            sNumbers.put(street, new ArrayList<>());
+            if (hNumber == 1) {
+                sNumbers.get(street).add(1);
+            } else {
+                sNumbers.get(street).add(2);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public Map<String, List<Integer>> getsNumbers() {
         return sNumbers;
     }
 
 
     public static void main(String[] args) {
-        StreetNumber streetNumber= new StreetNumber();
+        StreetNumber streetNumber = new StreetNumber();
         streetNumber.readFromFile("src/main/resources/streets.txt");
         System.out.println(streetNumber.getsNumbers());
     }
